@@ -1,0 +1,178 @@
+/* base.css — reset、系统字体栈、focus-visible、无障碍工具类。
+ *
+ * ★ 系统字体栈不是将就，是硬约束：file:// 下 @font-face 被 CORS 拦（opaque origin）。
+ *   见 DESIGN.md §2。所以字体栈要写全，让 Windows/Mac/iOS/Android 都拿到好字体。
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ★ hidden 属性必须真的藏住，用 !important 钉死。
+ *
+ *   浏览器默认的 `[hidden] { display: none }` 来自 UA 样式表，优先级低于【任何】
+ *   作者样式。所以只要元素身上有一个设了 display 的类——比如 `.chip { display:inline-flex }`
+ *   ——hidden 属性就静默失效：元素带着 hidden、DOM 里看着是对的，屏幕上却照常显示。
+ *
+ *   这个坑本项目已经踩过两次（.zoom-overlay[hidden] 与 .attract[hidden] 都是补丁），
+ *   而 .chip 漏了：展台横幅 "DEMO MODE: THESE ARE TEST IMAGES" 于是一直挂在答题屏上，
+ *   明明玩的是真图。与其每加一个组件补一次，不如在这里一次钉死。
+ *
+ *   取舍：!important 通常是坏味道，但 [hidden] 是"语义化的不可见"，本来就该赢过
+ *   任何组件的 display 声明。这条规则的适用范围只有"同时设了 display 类又设了
+ *   hidden 属性"的元素——那本来就是 bug。 */
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+               "Noto Sans", "Liberation Sans", Arial, sans-serif;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-tight);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  /* 展台：抑制一切浏览器"手感"行为 */
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 只有交互密集的屏幕才禁选中——总结页的分数要允许孩子长按复制给家长看 */
+body[data-screen="round"],
+body[data-screen="reveal"],
+body[data-screen="attract"] { user-select: none; -webkit-user-select: none; }
+
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+
+h1, h2, h3 {
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-hero);
+  font-weight: 600;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+button {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ── 焦点环 ────────────────────────────────────────────────────────
+ * 双层：内层深蓝描边 + 外层白色光晕。
+ * 白晕是必需的——单色描边压在照片上根本看不见（而我们的卡片就是照片）。
+ * 蓝色刻意与两个结果色不同族，免得揭晓后被误读成"这张是 AI"。
+ */
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--focus-halo);
+  border-radius: var(--r-sm);
+}
+
+/* 卡片上的焦点环要更粗，因为底下是高对比的照片 */
+.card:focus-visible {
+  outline-width: 4px;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px var(--focus-halo);
+}
+
+/* ── 无障碍工具类 ─────────────────────────────────────────────────
+ * 必须用"可被读屏读到但不可见"，不能 display:none —— 那会连读屏一起藏掉。
+ * aria-live 播报节点全靠这个类。 */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 跳过链接：键盘用户按一次 Tab 就能跳过 HUD */
+.skip-link {
+  position: absolute;
+  left: var(--sp-3);
+  top: -100px;
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface);
+  border: 2px solid var(--focus);
+  border-radius: var(--r-sm);
+  transition: top var(--dur-fast) var(--ease-out);
+}
+.skip-link:focus { top: var(--sp-3); }
+
+/* ── 屏幕切换 ──────────────────────────────────────────────────────
+ * 一个属性驱动，不用 JS 显隐。display:none 让非活动屏幕自动离开无障碍树，
+ * 于是"轮次中 DOM 里不得有答案"这条要求只需要一条 CSS 规则就满足了一半。
+ */
+.screen { display: none; }
+
+body[data-screen="boot"]    .screen[data-when="boot"],
+body[data-screen="attract"] .screen[data-when="attract"],
+body[data-screen="menu"]    .screen[data-when="menu"],
+body[data-screen="round"]   .screen[data-when="round"],
+body[data-screen="reveal"]  .screen[data-when="reveal"],
+body[data-screen="teach"]   .screen[data-when="teach"],
+body[data-screen="summary"] .screen[data-when="summary"],
+body[data-screen="error"]   .screen[data-when="error"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: 100vh;
+}
+
+/* reveal 与 teach 是同一个视觉阶段的两半：揭晓动画在卡片上，
+ * 教学面板在其下方。所以 reveal 屏只显示板，teach 屏显示板+面板。 */
+body[data-screen="reveal"] .screen[data-when="round"],
+body[data-screen="teach"]  .screen[data-when="round"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: 100vh;
+}
+
+/* ── ★ 答题屏必须是【恰好一屏高】，不能只是"至少一屏高" ──────────────
+ *
+ *   .board 是 flex:1 1 auto，卡片按图片原生 3:2 定尺寸。1440×900 下板子要 451px，
+ *   教学面板上限 46vh = 414px，两者加上头部就超过 900 —— 而 min-height:100vh
+ *   遇到内容超出时【只会让 section 跟着长高】：实测 section 变成 1071px，
+ *   .teach-wrap 的底边落到 y=1039，比视口底边(900)低 139px。
+ *
+ *   后果很隐蔽：「下一题」是 position:sticky; bottom:0，它忠实地贴在滚动容器的
+ *   底边上、一动不动，看起来像 sticky 根本没生效 —— 其实是那条底边本身在屏幕外。
+ *   玩家得先把【整页】往下滚 171px 才看得见按钮，而屏幕上没有任何东西提示可以滚。
+ *
+ *   高度给死之后，flex 容器才有了"可分配空间"这个概念，.board 与 .teach-wrap
+ *   才会真的收缩（两条 flex 规则见 layout.css）。100dvh 写在前面给新浏览器，
+ *   100vh 兜底：不认 dvh 的旧版会把整条声明丢掉，退回上一条，不会退化成 0。
+ *
+ *   overflow-y:auto 是给极矮视口兜底的（见 layout.css 里板子与面板的下限）：
+ *   到 740×360 这种高度，头部本身要约 230px，板子下限 122px 加面板下限 152px
+ *   就是塞不进 360px。这时让【屏幕自己】滚，而不是让整页滚 ——
+ *   屏幕永远是恰好一屏，文档永远不滚，滚动被关在这块屏里面，
+ *   滚动条也出现在该出现的地方。正常视口下内容正好铺满，不会冒出滚动条。
+ *
+ *   刻意不写 overflow:hidden：裁掉之后就彻底够不着了。 */
+body[data-screen="round"]  .screen[data-when="round"],
+body[data-screen="reveal"] .screen[data-when="round"],
+body[data-screen="teach"]  .screen[data-when="round"] {
+  height: 100dvh;
+  height: 100vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI of niet AI? · CRIG Ontdekt</title>
+<meta name="description" content="Twee beelden. Eén is echt, één is gemaakt door AI. Kijk goed en kies.">
+<meta name="color-scheme" content="light">
+
+<!--
+  ★ 为什么全是经典 <script defer>，没有一个是 type="module"：
+    展台是从磁盘双击这个文件打开的（file://）。在 file:// 下 ES modules
+    会被 CORS 拦掉（opaque origin），fetch() 本地 JSON 也一样。
+    所以：脚本挂 window，题库是 .js 而不是 .json，字体用系统栈。
+    见 DESIGN.md §2。顺序 = 依赖顺序，不能随便调。
+
+  ★ 这里没有 <link rel="stylesheet" href="https://...">，
+    也没有任何外链。kiosk 断言会检查这一点：展台断网也必须完整可玩。
+-->
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/motion.css">
+</head>
+
+<body data-mode="web" data-screen="boot">
+
+<a class="skip-link" href="#board" data-i18n="round.question">Welk beeld is door AI gemaakt?</a>
+
+<!-- ══ boot ══════════════════════════════════════════════════════════
+     一个几乎不可见的屏。它存在的意义是：如果启动就抛异常，
+     玩家看到的不是白屏，而是 error 屏上的一段可读的堆栈。 -->
+<section class="screen" data-when="boot">
+  <div class="center-col">
+    <p data-i18n="app.title">AI of niet AI?</p>
+  </div>
+</section>
+
+<!-- ══ attract ═══════════════════════════════════════════════════════
+     展台空闲时循环显示。2 米外可读，慢动画，不闪烁。 -->
+<section class="screen attract" data-when="attract">
+  <h1 class="pulse" data-i18n="app.title">AI of niet AI?</h1>
+  <p data-i18n="app.tagline">Twee beelden. Eén is echt, één is gemaakt door AI.</p>
+  <p class="tap-hint" data-i18n="attract.tap">Tik om te spelen</p>
+  <p class="hud-stat" data-i18n="attract.hint">Kijk goed. Vergroot als je twijfelt.</p>
+</section>
+
+<!-- ══ menu ══════════════════════════════════════════════════════════ -->
+<section class="screen" data-when="menu">
+  <header class="hud">
+    <span class="hud-stat" id="hud-level"></span>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost" id="btn-deck-menu" type="button" title="Deck Manager [D]" data-i18n="hud.deck">Deck</button>
+    <button class="btn btn-ghost" id="btn-lang" type="button"
+            data-i18n="hud.langSwitch" data-i18n-aria="hud.lang" data-i18n-title="hud.lang">🌐 English</button>
+    <button class="btn btn-ghost web-only" id="btn-sound" type="button"></button>
+  </header>
+
+  <div class="center-col">
+    <h1 data-i18n="app.title">AI of niet AI?</h1>
+    <p data-i18n="app.tagline">Twee beelden. Eén is echt, één is gemaakt door AI.</p>
+    <div class="menu-grid" id="menu-grid"></div>
+    <button class="btn btn-primary btn-next" id="menu-start" type="button" data-i18n="menu.start">Start</button>
+  </div>
+</section>
+
+<!-- ══ round / reveal / teach ════════════════════════════════════════
+     三个阶段共用这一个 section：揭晓动画发生在卡片上（reveal），
+     教学面板在其下方滑入（teach）。拆成三个 section 会让卡片被重建，
+     而重建就意味着要重新加载图片——揭晓时刻最不该发生的事。 -->
+<section class="screen" data-when="round">
+  <header class="hud">
+    <span class="hud-stat" id="hud-round"></span>
+    <span class="hud-stat" id="hud-score"></span>
+    <span class="hud-stat" id="hud-streak"></span>
+    <span class="spacer"></span>
+    <span class="chip demo-flag" id="demo-flag" hidden data-i18n="note.placeholders"></span>
+    <span class="chip kiosk-only" id="reset-chip" hidden></span>
+    <button class="btn btn-ghost" id="btn-loupe" type="button" title="Toggle Loupe [M]" data-i18n="hud.loupeOff">🔍 Loep: Uit</button>
+    <button class="btn btn-ghost" id="btn-deck-round" type="button" title="Deck Manager [D]" data-i18n="hud.deck">Deck</button>
+    <button class="btn btn-ghost" id="btn-lang-round" type="button"
+            data-i18n="hud.langSwitch" data-i18n-aria="hud.lang" data-i18n-title="hud.lang">🌐 English</button>
+    <button class="btn btn-ghost" id="btn-menu" type="button" data-i18n="hud.menu">Menu</button>
+  </header>
+
+  <h1 class="round-question" id="round-question" data-i18n="round.question">Welk beeld is door AI gemaakt?</h1>
+
+  <!-- 作答限时：扁平进度条，不用倒数数字——避免读秒焦虑。 -->
+  <div class="timer" id="timer" role="progressbar" aria-hidden="true"><i></i></div>
+
+  <div class="board" id="board"></div>
+
+  <div class="teach-wrap" id="teach-wrap"></div>
+</section>
+
+<!-- ══ summary ═══════════════════════════════════════════════════════ -->
+<section class="screen" data-when="summary">
+  <div class="center-col">
+    <h1 data-i18n="summary.title">Klaar!</h1>
+    <div id="summary-body"></div>
+    <div class="row center">
+      <button class="btn btn-primary" id="btn-again" type="button" data-i18n="summary.again">Nog een keer</button>
+      <button class="btn" id="btn-deck-summary" type="button" title="Deck Manager [D]" data-i18n="hud.deck">Deck</button>
+      <button class="btn" id="btn-tomenu" type="button" data-i18n="summary.menu">Terug naar menu</button>
+      <button class="btn btn-ghost" id="btn-lang-summary" type="button"
+              data-i18n="hud.langSwitch" data-i18n-aria="hud.lang" data-i18n-title="hud.lang">🌐 English</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ error ═════════════════════════════════════════════════════════
+     展台上最糟的结果是白屏：观众排队等着，屏幕什么都不说。
+     所以任何启动异常都要落到这里，并且把原因写在屏幕上。 -->
+<section class="screen" data-when="error">
+  <div class="center-col">
+    <div class="error-box">
+      <h1 id="err-title"></h1>
+      <pre id="err-detail"></pre>
+    </div>
+    <button class="btn btn-primary" id="btn-retry" type="button" data-i18n="error.retry">Opnieuw</button>
+  </div>
+</section>
+
+<!-- 读屏播报节点。
+     ★ 必须用 .visually-hidden（clip-path）而不是 display:none ——
+       后者会把它从无障碍树里一起去掉，于是什么都播不出来。 -->
+<p class="visually-hidden" id="live" role="status" aria-live="polite"></p>
+
+<!-- ── 依赖顺序，不可调换 ────────────────────────────────────────────
+     config → util → 纯逻辑模块 → 基础设施 → UI → main -->
+<script defer src="js/config.js"></script>
+<script defer src="js/util.js"></script>
+<script defer src="js/difficulty.js"></script>
+<script defer src="js/i18n.js"></script>
+<script defer src="js/scoring.js"></script>
+<script defer src="js/machine.js"></script>
+<script defer src="js/validate.js"></script>
+<script defer src="js/selector.js"></script>
+<script defer src="js/placeholder.js"></script>
+
+<!-- 题库：现在有 7 道真题（源 deck 的 slides 2–8），全部 scope=kiosk。
+     compose.js 把真实题与占位题合起来，引擎分辨不出差别。
+     ★ 加内容不要改这里，改 data/*.csv 然后重跑 tools/gen_manifest.py。 -->
+<script defer src="data/manifest.js"></script>
+<script defer src="data/compose.js"></script>
+
+<script defer src="js/modes.js"></script>
+<script defer src="js/dom.js"></script>
+<script defer src="js/answer-reveal.js"></script>
+<script defer src="js/sound.js"></script>
+<script defer src="js/zoom.js"></script>
+<script defer src="js/kiosk.js"></script>
+<script defer src="js/loupe.js"></script>
+<script defer src="js/deck-manager.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>

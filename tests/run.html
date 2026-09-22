@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI of niet AI? — tests</title>
+<!--
+  浏览器侧的测试入口。与本目录的 run.js 加载完全相同的文件、完全相同的顺序。
+  直接双击打开即可（file:// 下可用：全部是经典 script，没有 module、没有 fetch）。
+
+  两个入口都要跑：Node 那边刻意不提供 window/document，
+  所以任何意外触碰 DOM 的"纯"模块会在 Node 里炸、在浏览器里不炸。
+-->
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font: 15px/1.6 system-ui, "Segoe UI", Roboto, sans-serif;
+    margin: 0; padding: 24px; max-width: 900px;
+    background: #F7FAF9; color: #2C4A4A;
+  }
+  h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+  p.sub { margin: 0 0 20px; opacity: .7; font-size: 14px; }
+  .banner { padding: 12px 16px; border-radius: 8px; font-weight: 600; margin-bottom: 16px; }
+  .banner.good { background: #D8EFE9; border: 2px solid #2C7A6B; }
+  .banner.bad  { background: #FBE3D4; border: 2px solid #B4551F; }
+  pre.fail {
+    white-space: pre-wrap; margin: 0 0 12px; padding: 12px 14px;
+    background: #FFF1E7; border-left: 4px solid #B4551F; border-radius: 4px;
+    font-size: 13px;
+  }
+  ol { padding-left: 20px; font-size: 13px; opacity: .75; }
+  code { background: #E9F2F0; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>AI of niet AI? — 测试</h1>
+<p class="sub">
+  纯逻辑模块 + 需要 DOM 的守卫。<code>node tests/run.js</code> 跑其中的纯逻辑部分；
+  本页面多跑 <code>test.dom.*</code>（那几个在 Node 里没有 document，跑不了）。
+  <strong>两个入口都要跑。</strong>
+  另见 <code>README.md</code> 里的手工验收清单（<code>file://</code> 那一步无可替代）。
+</p>
+
+<div id="results"></div>
+
+<ol>
+  <li>没有失败项时，这里只显示一条绿色横幅。</li>
+  <li>任何失败会列出「套件 › 用例」与原因。</li>
+  <li>打开 DevTools 控制台可看到同样的输出。</li>
+</ol>
+
+<!-- ↓↓↓ 顺序即依赖顺序，与 tests/run.js 的 SOURCES 必须一致 ↓↓↓
+     ★ 这两个清单【曾经漂移过】：run.js 加了 modes 与 answer-reveal，
+       run.html 没跟上，于是那一批用例在浏览器里根本没跑，而页面显示全绿。
+       改动任一边时，另一边必须同时改。 -->
+<script src="../js/config.js"></script>
+<script src="../js/util.js"></script>
+<script src="../js/difficulty.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/selector.js"></script>
+<script src="../js/scoring.js"></script>
+<script src="../js/machine.js"></script>
+<script src="../js/validate.js"></script>
+<script src="../js/placeholder.js"></script>
+<script src="../js/modes.js"></script>
+<script src="../js/answer-reveal.js"></script>
+<script src="../data/manifest.js"></script>
+<script src="../data/compose.js"></script>
+
+<!-- 以下是【浏览器独有】的：Node 侧刻意不提供 window/document/localStorage -->
+<script src="../js/dom.js"></script>
+
+<script src="assert.js"></script>
+<script src="helpers.js"></script>
+<script src="fixture.difficulty.js"></script>
+
+<script src="test.difficulty.js"></script>
+<script src="test.selector.js"></script>
+<script src="test.scoring.js"></script>
+<script src="test.machine.js"></script>
+<script src="test.validate.js"></script>
+<script src="test.placeholder.js"></script>
+<script src="test.i18n.js"></script>
+<script src="test.modes.js"></script>
+<script src="test.answer-reveal.js"></script>
+<script src="test.manifest.js"></script>
+<script src="test.dom.answer-reveal.js"></script>
+<script src="test.dom.events.js"></script>
+
+<script>window.AON_TEST.report();</script>
+</body>
+</html>

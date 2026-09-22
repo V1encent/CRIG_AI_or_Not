@@ -1,0 +1,248 @@
+{
+  "p001": {
+    "aiSlot": 2,
+    "images": {
+      "1": {
+        "sourceWidth": 1736,
+        "sourceHeight": 1158,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          0,
+          0,
+          1199,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 539,
+        "sourceHeight": 410,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          74,
+          0,
+          1052,
+          800
+        ]
+      }
+    }
+  },
+  "p002": {
+    "aiSlot": 2,
+    "images": {
+      "1": {
+        "sourceWidth": 1910,
+        "sourceHeight": 1275,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          1,
+          0,
+          1198,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 556,
+        "sourceHeight": 373,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          4,
+          0,
+          1192,
+          800
+        ]
+      }
+    }
+  },
+  "p003": {
+    "aiSlot": 1,
+    "images": {
+      "1": {
+        "sourceWidth": 549,
+        "sourceHeight": 370,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          6,
+          0,
+          1187,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 1910,
+        "sourceHeight": 1275,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          1,
+          0,
+          1198,
+          800
+        ]
+      }
+    }
+  },
+  "p004": {
+    "aiSlot": 2,
+    "images": {
+      "1": {
+        "sourceWidth": 1910,
+        "sourceHeight": 1275,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          1,
+          0,
+          1198,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 555,
+        "sourceHeight": 370,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          0,
+          0,
+          1200,
+          800
+        ]
+      }
+    }
+  },
+  "p005": {
+    "aiSlot": 1,
+    "images": {
+      "1": {
+        "sourceWidth": 555,
+        "sourceHeight": 370,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          0,
+          0,
+          1200,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 1910,
+        "sourceHeight": 1275,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          1,
+          0,
+          1198,
+          800
+        ]
+      }
+    }
+  },
+  "p006": {
+    "aiSlot": 1,
+    "images": {
+      "1": {
+        "sourceWidth": 549,
+        "sourceHeight": 370,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          6,
+          0,
+          1187,
+          800
+        ]
+      },
+      "2": {
+        "sourceWidth": 1910,
+        "sourceHeight": 1275,
+        "outWidth": 1200,
+        "outHeight": 800,
+        "cropBox": [
+          0,
+          0,
+          1.0,
+          1.0
+        ],
+        "pad": [
+          1,
+          0,
+          1198,
+          800
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,182 @@
+/* layout.css — 屏幕骨架、卡片板、宽高比查询、kiosk 放大。
+ *
+ * ★ 关键决定：用【视口形状】查询而不是宽度断点。
+ *   宽度断点会错两次：手机横屏(740×360)低于阈值但理应并排；
+ *   竖屏平板(900×1200)高于阈值但理应堆叠。形状才是有意义的信号。
+ */
+
+/* ── 通用屏幕骨架 ────────────────────────────────────────────────── */
+.screen {
+  padding: var(--sp-4);
+  gap: var(--sp-4);
+}
+
+/* ── HUD ─────────────────────────────────────────────────────────── */
+.hud {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.hud .spacer { flex: 1 1 auto; }
+
+/* ── 卡片板 ──────────────────────────────────────────────────────── */
+.board {
+  flex: 1 1 auto;
+  display: grid;
+  gap: var(--sp-3);
+  /* 默认堆叠（竖屏手机） */
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr;
+  /* ★ 下限，不是 0。
+   *   min-height:0 让 1fr 在 grid 里真的能收缩（否则卡片会撑破视口）——这条要留着。
+   *   但"能收缩"不等于"可以缩到没有"：在 740×360 这种极矮视口上，
+   *   教学面板的下限一顶，板子就会被压成 0px，两张卡直接消失，
+   *   那是【完全没法玩】，比整页滚一下糟糕得多。
+   *   上限 280px 是为了在正常视口下不干扰：那里板子本来就有 380px 以上。 */
+  min-height: min(34vh, 280px);
+}
+
+/* 至少方形就并排。用 min-aspect-ratio 而非宽度。 */
+@media (min-aspect-ratio: 1/1) {
+  .board {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+}
+
+/* ── ★ 卡槽：网格项，两张【像素尺寸完全一致】 ──────────────────────
+ *
+ * 为什么是 .card-slot 套着 .card，而不是卡片自己当按钮：
+ *   卡片里要放一个"放大"按钮，而 <button> 里不能再套 <button>——
+ *   那是非法 HTML，浏览器会把内层拆出去，焦点顺序随即崩坏。
+ *   所以两者是【兄弟】，放大按钮绝对定位浮在卡片右上角。
+ *
+ * 尺寸一致由网格保证（1fr 1fr），不是靠两边各写一遍同样的样式——
+ * 后者迟早会有一边被改漏，而"一张稍大"本身就是提示。
+ */
+.card-slot {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+}
+
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface-alt);
+  border: 3px solid var(--line);
+  border-radius: var(--r-md);
+  /* outline 用来表达"玩家选了这张"，见 components.css：
+   * 它与 border 是两个独立通道，因此"选了哪张"和"哪张是 AI"
+   * 能同时显示在一张卡上而不互相覆盖。 */
+  transition: border-color var(--dur-mid) var(--ease-out),
+              outline-color var(--dur-mid) var(--ease-out),
+              transform var(--dur-mid) var(--ease-out);
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000000;
+}
+
+/* 平板/桌面给一点悬停反馈；触摸设备上不会触发 */
+@media (hover: hover) {
+  .card:hover { border-color: var(--line-strong); }
+}
+
+/* ── 卡片右上角旧放大镜按钮已停用，改由顶栏专属放大镜统一控制 ───────────────────── */
+.card-slot .zoom-btn {
+  display: none !important;
+}
+
+/* 卡片序号（A / B）。中性标签，不携带任何答案信息。 */
+.card .slot-label {
+  position: absolute;
+  left: var(--sp-2);
+  top: var(--sp-2);
+  padding: 4px var(--sp-2);
+  background: rgba(255, 255, 255, .92);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+}
+
+/* ── 教学面板容器 ──────────────────────────────────────────────────
+ * ★ 空间不够时，先让面板让路，板子优先。
+ *
+ *   flex-shrink 给 4（板子是 1），所以收缩不是对半分：1440×900 实测板子 409px、
+ *   面板 261px。理由是不对称的 —— 面板本来就能滚，而且「下一题」是 sticky 的，
+ *   它矮一点只是多滚两下；板子被压扁是直接看不清图，那才是真的玩不了。
+ *
+ *   min-height 是"再挤也不能比这更矮"，而且必须【以 152px 打底】：
+ *   那是 sticky 的「下一题」自己(104px) ＋ 面板内边距(sp-4×2 = 48px)。
+ *   比这更矮，按钮就会被裁掉一截 —— 而按钮被裁 = 又回到"够不着"。
+ *   在正常视口上取 26vh，让面板至少能看到几行正文，而不是只剩一个按钮。
+ *
+ *   ★ 光有这两条还不够，得配合 base.css 里给答题屏写死的 height ——
+ *     min-height:100vh 时容器高度不确定，flex 没有可分配空间，两边都不会收缩。 */
+.teach-wrap {
+  flex: 0 1 auto;
+  flex-shrink: 4;
+  min-height: max(152px, 26vh);
+  max-height: 52dvh;
+  max-height: 52vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* 竖屏时面板占满剩余空间；横屏并排时面板在下方，允许滚动 */
+@media (min-aspect-ratio: 1/1) {
+  .teach-wrap { max-height: 46dvh; max-height: 46vh; }
+}
+
+/* ── 居中列：菜单、总结、attract 共用 ─────────────────────────────── */
+.center-col {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  text-align: center;
+  min-height: 0;
+}
+
+.stack { display: flex; flex-direction: column; gap: var(--sp-2); }
+.row   { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.row.tight { gap: var(--sp-2); }
+.row.center { justify-content: center; }
+
+/* 菜单按钮组：窄屏单列，宽屏两列 */
+.menu-grid {
+  display: grid;
+  gap: var(--sp-3);
+  width: min(100%, 680px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px) {
+  .menu-grid { grid-template-columns: 1fr 1fr; }
+  .menu-grid .span-2 { grid-column: 1 / -1; }
+}
+
+/* ── kiosk 放大 ──────────────────────────────────────────────────── */
+body[data-mode="kiosk"] .screen { padding: var(--sp-5); }
+body[data-mode="kiosk"] .hud    { gap: var(--sp-4); }
+
+/* 展台上不留悬停态——触摸屏的 :hover 会粘住 */
+body[data-mode="kiosk"] .card:hover { border-color: var(--line); }
+
+/* 展台不显示需要精确点击的小控件 */
+body[data-mode="kiosk"] .web-only { display: none !important; }
+body[data-mode="web"]   .kiosk-only { display: none !important; }

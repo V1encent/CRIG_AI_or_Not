@@ -1,0 +1,98 @@
+{
+  "Matrix": {
+    "cue": "text",
+    "subject": {
+      "nl": "Onderzoeker voor netwerkwand in groen licht",
+      "en": "Researcher in front of network wall lit green"
+    },
+    "tellRegion": { "x": 0.285, "y": 0.285, "w": 0.16, "h": 0.236 },
+    "explanation": {
+      "nl": "Kijk naar de twee grafieken op het scherm. De grote getallen zijn foutloos, maar de aslabels naast en onder de grafieken zijn geen letters of cijfers: het zijn betekenisloze vlekjes. Een echte grafiek heeft overal leesbare labels.",
+      "en": "Look at the two charts on the screen. The large numbers are flawless, but the axis labels beside and below the charts are not letters or digits at all: they are meaningless smudges. A real chart has readable labels everywhere."
+    },
+    "rule": {
+      "nl": "AI schrijft grote woorden meestal goed, maar kleine letters zijn decoratie. Vergroot daarom altijd de kleinste tekst in beeld.",
+      "en": "AI usually gets big words right, but small lettering is just decoration. So always zoom in on the smallest text in the frame."
+    }
+  },
+  "Zebrafish": {
+    "cue": "repetition",
+    "subject": {
+      "nl": "Zebravis vrij zwemmend in aquarium",
+      "en": "Zebrafish swimming free in aquarium"
+    },
+    "tellRegion": { "x": 0.02, "y": 0.66, "w": 0.3, "h": 0.22 },
+    "explanation": {
+      "nl": "Tel de vinnen. Langs de buik van de vis staan twee bijna identieke vinnen naast elkaar, en halverwege het lichaam veranderen de strepen in een stippatroon.",
+      "en": "Count the fins. Two near-identical fins sit next to each other along the belly of the fish, and halfway down the body the stripes dissolve into a dotted mesh."
+    },
+    "rule": {
+      "nl": "Bij dieren en organismen: tel de onderdelen. AI maakt er vaak één te veel of één te weinig.",
+      "en": "With animals and organisms: count the parts. AI often makes one too many or one too few."
+    }
+  },
+  "LN": {
+    "cue": "text",
+    "subject": {
+      "nl": "Onderzoeker bij stikstoftank en wandposter",
+      "en": "Researcher at liquid nitrogen dewar and wall poster"
+    },
+    "tellRegion": { "x": 0.79, "y": 0.02, "w": 0.16, "h": 0.13 },
+    "explanation": {
+      "nl": "Kijk naar de affiche aan de muur achter haar. De letters zien eruit als tekst, maar je krijgt er geen woord uit — het is nagemaakt schrift.",
+      "en": "Look at the poster on the wall behind her. The letters look like writing but no word comes out — it is imitation script."
+    },
+    "rule": {
+      "nl": "Zoek in elk beeld naar achtergrondtekst en probeer die te lezen. Als het niet lukt, is het beeld gemaakt.",
+      "en": "In every image, look for background text and try to read it. If you can't, the image was generated."
+    }
+  },
+  "Microscope": {
+    "cue": "cell-structure",
+    "subject": {
+      "nl": "Microscoop met celbeeld op het scherm",
+      "en": "Microscope with cell image on screen"
+    },
+    "tellRegion": { "x": 0.46, "y": 0.12, "w": 0.28, "h": 0.55 },
+    "explanation": {
+      "nl": "Kijk naar het beeld op het scherm. Dat moeten cellen zijn, maar het zijn symmetrische stervormen zoals sneeuwvlokken. Echte cellen hebben een kern en zijn nooit perfect symmetrisch.",
+      "en": "Look at the image on the screen. Those are supposed to be cells, but they are symmetrical starbursts like snowflakes. Real cells have a nucleus and are never perfectly symmetrical."
+    },
+    "rule": {
+      "nl": "Denk bij een microscoopbeeld aan wat cellen echt zijn: ze hebben een kern en een membraan, en zijn nooit geometrisch symmetrisch.",
+      "en": "When you see a microscopy image, remember what cells really are: they have a nucleus and an edge, and are never geometrically symmetrical."
+    }
+  },
+  "Celldish": {
+    "cue": "physics",
+    "subject": {
+      "nl": "Kweekschaal met roze medium",
+      "en": "Culture dish with pink medium"
+    },
+    "tellRegion": { "x": 0.12, "y": 0.38, "w": 0.3, "h": 0.24 },
+    "explanation": {
+      "nl": "Kijk naar het vloeistofoppervlak in de schaal. Het roze medium loopt als een rechte horizontale streep dwars over de ronde wand — maar vloeistof in een ronde schaal vormt altijd een ellips.",
+      "en": "Look at the liquid surface in the dish. The pink medium runs as a straight horizontal stripe across the round wall — but liquid in a round dish always forms an ellipse."
+    },
+    "rule": {
+      "nl": "Vloeistoffen verklappen AI: het vloeistofoppervlak in een rond vat volgt altijd een kromme ellips.",
+      "en": "Liquids give AI away: the liquid surface in a round vessel always follows a curved ellipse."
+    }
+  },
+  "Pipette": {
+    "cue": "repetition",
+    "subject": {
+      "nl": "Multichannel pipet boven 96-wellsplaat",
+      "en": "Multichannel pipette above 96-well plate"
+    },
+    "tellRegion": { "x": 0.1, "y": 0.45, "w": 0.34, "h": 0.35 },
+    "explanation": {
+      "nl": "Kijk naar de pipet en de plaat eronder. De tips hangen te dicht bij elkaar en komen naast de putjes uit. Boven de plaat zweeft bovendien een rij lege ringen die nergens bij horen.",
+      "en": "Look at the pipette and the plate below it. The tips sit too close together and come down beside the wells. Above the plate a row of empty rings also floats with nothing under it."
+    },
+    "rule": {
+      "nl": "Bij alles met een raster of patroon — putjes, toetsen, tips: controleer of de onderdelen gelijkmatig verdeeld zijn.",
+      "en": "With anything that has a grid or pattern — wells, keys, tips: check whether the parts are evenly spaced."
+    }
+  }
+}

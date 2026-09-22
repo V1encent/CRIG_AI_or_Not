@@ -1,0 +1,74 @@
+/* motion.css — 揭晓动画 + prefers-reduced-motion 覆盖。
+ *
+ * ★ 不做翻牌。翻牌是直觉选择，但在这里是错的：
+ *   镜像的照片无法阅读，会毁掉整个教学时刻。
+ *   改用【色块 + 徽标 + 聚光】，约 450ms（见 DESIGN.md §8）。
+ *
+ * 时间线（与 js/ui.round.js 的 JS 定时器一一对应，改一处必须改另一处）：
+ *   t=0    被选中的卡 data-state="picked"：描边进入 + 抬升
+ *   t=120  两卡盖 wash，徽标弹入（AI / ECHT）
+ *   t=300  AI 卡实色描边 + 放大 1.03
+ *   t=450  教学面板上滑，焦点移到面板标题
+ *   t=900  聚焦图动画缩放并居中到 tellRegion
+ */
+
+@keyframes aon-pulse {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.045); opacity: .88; }
+}
+
+@keyframes aon-badge-in {
+  from { opacity: 0; transform: translateX(-50%) scale(.72); }
+  to   { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+@keyframes aon-panel-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aon-ring-in {
+  from { opacity: 0; transform: scale(.82); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── 教学面板上滑 ────────────────────────────────────────────────── */
+body[data-screen="teach"] .teach {
+  animation: aon-panel-up var(--dur-slow) var(--ease-out) both;
+}
+
+/* ── 破绽聚焦环 ──────────────────────────────────────────────────── */
+.teach-focus .ring {
+  animation: aon-ring-in var(--dur-slow) var(--ease-out) 300ms both;
+}
+
+/* ── 徽标弹入 ────────────────────────────────────────────────────── */
+.card[data-state="ai"]   .card-badge,
+.card[data-state="real"] .card-badge {
+  animation: aon-badge-in var(--dur-mid) var(--ease-out) both;
+}
+
+/* ── 计时条：用 transform 而不是 width，避开每帧布局 ─────────────── */
+.timer > i {
+  transition: transform 100ms linear, background-color var(--dur-fast) linear;
+}
+
+/* ── ★ 关闭动画时全部瞬时出现 ─────────────────────────────────────
+ * 只把时长归零是不够的：任何带 delay 的 animation 仍会等待，
+ * 画面会卡在"过渡中间"那一帧。所以延迟也必须归零。
+ * 面板的聚焦由 JS 负责（focus() 不受 CSS 影响），所以读屏顺序不受影响。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .attract .pulse { animation: none; }
+  .card[data-state="picked"],
+  .card[data-state="ai"] { transform: none; }
+  .teach-focus .ring { animation: none; opacity: 1; }
+}
