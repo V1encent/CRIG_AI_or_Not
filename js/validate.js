@@ -62,7 +62,7 @@
     if (!t.cue) push('missing-cue');
     if (!hasText(t.explanation)) push('missing-explanation');
     if (!hasText(t.kidLine)) push('missing-kidline');
-    if (!hasText(t.rule)) push('missing-rule');
+    if (t.rule !== undefined && t.rule !== null && !hasText(t.rule)) push('missing-rule');
     if (!t.tellRegion) push('missing-tellregion');
     else {
       var r = t.tellRegion;

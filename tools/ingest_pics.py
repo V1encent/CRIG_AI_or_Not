@@ -97,12 +97,14 @@ def process_and_save_webp(src_path, dest_path):
         new_h = max(1, int(round(h * scale)))
         resized = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
         
-        canvas = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), (0, 0, 0))
         offset_x = (TARGET_WIDTH - new_w) // 2
         offset_y = (TARGET_HEIGHT - new_h) // 2
-        canvas.paste(resized, (offset_x, offset_y))
         
-        canvas.save(dest_path, "WEBP", quality=WEBP_QUALITY, method=6)
+        if not os.path.exists(dest_path):
+            resized = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+            canvas = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), (0, 0, 0))
+            canvas.paste(resized, (offset_x, offset_y))
+            canvas.save(dest_path, "WEBP", quality=WEBP_QUALITY, method=6)
         
         return {
             "sourceWidth": w,
@@ -192,14 +194,23 @@ def main():
                 "nl": f"Kijk goed naar de details en consistentie van {orig_key}.",
                 "en": f"Look closely at the details and consistency of {orig_key}."
             })
-            rule = meta.get("rule", {
-                "nl": "Vergroot altijd verdachte structuren om te zien of ze natuurlijk doorlopen.",
-                "en": "Always zoom in on suspicious structures to check if they have natural continuity."
-            })
+            rule = meta.get("rule")
             tell_region = meta.get("tellRegion", {"x": 0.25, "y": 0.25, "w": 0.5, "h": 0.5})
             cue = meta.get("cue", "cell-structure")
 
             diff = LEVEL_DIFFICULTIES.get(level_num, {"tells": 3, "subject": 3, "postprocessing": 3})
+
+            teaching_obj = {
+                "cue": cue,
+                "tellRegion": tell_region,
+                "explanation": explanation,
+                "kidLine": {
+                    "nl": f"Kijk goed naar de details van {orig_key}.",
+                    "en": f"Look closely at the details of {orig_key}."
+                }
+            }
+            if rule:
+                teaching_obj["rule"] = rule
 
             puzzle_obj = {
                 "id": pid,
@@ -259,16 +270,7 @@ def main():
                         }
                     }
                 ],
-                "teaching": {
-                    "cue": cue,
-                    "tellRegion": tell_region,
-                    "explanation": explanation,
-                    "kidLine": {
-                        "nl": f"Kijk goed naar de details van {orig_key}.",
-                        "en": f"Look closely at the details of {orig_key}."
-                    },
-                    "rule": rule
-                }
+                "teaching": teaching_obj
             }
             puzzles.append(puzzle_obj)
             print(f"  [OK] Level {level_num}: {orig_key} -> {pid} (AI=Slot {ai_slot}) [Annot: {'Yes' if annot else 'No'}]")

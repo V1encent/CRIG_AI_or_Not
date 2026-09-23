@@ -107,12 +107,15 @@
 
     T.it('教学载荷缺失（缺了就等于一道没有答案的题）', function () {
       [['cue', 'missing-cue'], ['explanation', 'missing-explanation'],
-       ['kidLine', 'missing-kidline'], ['rule', 'missing-rule'],
+       ['kidLine', 'missing-kidline'],
        ['tellRegion', 'missing-tellregion']].forEach(function (pair) {
         var p = H.mkPuzzle('x', EASY);
         delete p.teaching[pair[0]];
         has(V.puzzle(p), pair[1], '删掉 ' + pair[0]);
       });
+      var p2 = H.mkPuzzle('x2', EASY);
+      p2.teaching.rule = { nl: '', en: '' };
+      has(V.puzzle(p2), 'missing-rule', '空 rule 报 missing-rule');
     });
 
     T.it('tellRegion 退化（越出画面或零面积）', function () {
@@ -339,11 +342,11 @@
 
     T.it('逐题聚合问题码，并带上 id 便于定位', function () {
       var bad = H.mkPuzzle('bad', EASY);
-      delete bad.teaching.rule;
+      delete bad.teaching.explanation;
       var out = V.manifest([H.mkPuzzle('good', EASY), bad]);
       T.assertEquals(out.length, 1, '只有一道题有问题');
       T.assertEquals(out[0].id, 'bad');
-      has(out[0].codes, 'missing-rule');
+      has(out[0].codes, 'missing-explanation');
     });
 
     T.it('空题库 / null 不抛异常', function () {

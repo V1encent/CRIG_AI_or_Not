@@ -20,7 +20,7 @@
       "verifiedSolution": true
     },
     "note": {
-      "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosome met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
+      "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosomen met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
       "en": "Chromosomes with a creative twist? Hearts, spirals, circles and chromosomes with too many arms: AI imitates the look, but doesn’t always understand the biology."
     },
     "images": [
@@ -78,7 +78,7 @@
         "h": 0.5
       },
       "explanation": {
-        "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosome met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
+        "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosomen met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
         "en": "Chromosomes with a creative twist? Hearts, spirals, circles and chromosomes with too many arms: AI imitates the look, but doesn’t always understand the biology."
       },
       "kidLine": {
@@ -159,7 +159,7 @@
       }
     ],
     "teaching": {
-      "cue": "text",
+      "cue": "background",
       "tellRegion": {
         "x": 0.285,
         "y": 0.285,
@@ -173,10 +173,6 @@
       "kidLine": {
         "nl": "Kijk goed naar de details van Matrix.",
         "en": "Look closely at the details of Matrix."
-      },
-      "rule": {
-        "nl": "AI schrijft grote woorden meestal goed, maar kleine letters zijn decoratie. Vergroot daarom altijd de kleinste tekst in beeld.",
-        "en": "AI usually gets big words right, but small lettering is just decoration. So always zoom in on the smallest text in the frame."
       }
     }
   },
@@ -198,7 +194,7 @@
       "verifiedSolution": true
     },
     "note": {
-      "nl": "De AI-versie ziet er opvallend netjes en bijne futuristisch uit. De stikstofdamp krijgt een onnatuurlijke blauwe gloed en de onderzoeker draagt dunne labohandschoenen, in plaats van de dikke beschermende handschoenen uit de echte foto. AI maakt het Plaatje overtuigend, maar mist soms de praktische details.",
+      "nl": "De AI-versie ziet er opvallend netjes en bijna futuristisch uit. De stikstofdamp krijgt een onnatuurlijke blauwe gloed en de onderzoeker draagt dunne labohandschoenen, in plaats van de dikke beschermende handschoenen uit de echte foto. AI maakt het plaatje overtuigend, maar mist soms de praktische details.",
       "en": "The AI version looks unusually neat and almost futuristic. The nitrogen vapour had an unnatural blue glow, and the researcher wears thin lab gloves instead of the thick protective gloves seen in the real photo. AI makes the picture convincing, but sometimes misses the practical details."
     },
     "images": [
@@ -256,7 +252,7 @@
         "h": 0.13
       },
       "explanation": {
-        "nl": "De AI-versie ziet er opvallend netjes en bijne futuristisch uit. De stikstofdamp krijgt een onnatuurlijke blauwe gloed en de onderzoeker draagt dunne labohandschoenen, in plaats van de dikke beschermende handschoenen uit de echte foto. AI maakt het Plaatje overtuigend, maar mist soms de praktische details.",
+        "nl": "De AI-versie ziet er opvallend netjes en bijna futuristisch uit. De stikstofdamp krijgt een onnatuurlijke blauwe gloed en de onderzoeker draagt dunne labohandschoenen, in plaats van de dikke beschermende handschoenen uit de echte foto. AI maakt het plaatje overtuigend, maar mist soms de praktische details.",
         "en": "The AI version looks unusually neat and almost futuristic. The nitrogen vapour had an unnatural blue glow, and the researcher wears thin lab gloves instead of the thick protective gloves seen in the real photo. AI makes the picture convincing, but sometimes misses the practical details."
       },
       "kidLine": {
@@ -376,7 +372,7 @@
       "verifiedSolution": true
     },
     "note": {
-      "nl": "De AI-versie ziet er opnieuw opvallend schoon en perfect uit: geen druppels, condens of gebruikssporen. Kijk ook naar de vreemde vorm van de kweekfles en de flessen op de achtergrond die bijna in plastic doosjes veranderen be zelfs over lijken te lopen in het blauwe rekje.",
+      "nl": "De AI-versie ziet er opnieuw opvallend schoon en perfect uit: geen druppels, condens of gebruikssporen. Kijk ook naar de vreemde vorm van de kweekfles en de flessen op de achtergrond die bijna in plastic doosjes veranderen en zelfs over lijken te lopen in het blauwe rekje.",
       "en": "The AI version again looks unusually clean and perfect: no droplets, condensation or signs of use. Also notice the oddly shaped culture flask and the flasks in the background that almost turn into plastic boxes and even seem to merge into the blue rack."
     },
     "images": [
@@ -434,7 +430,7 @@
         "h": 0.24
       },
       "explanation": {
-        "nl": "De AI-versie ziet er opnieuw opvallend schoon en perfect uit: geen druppels, condens of gebruikssporen. Kijk ook naar de vreemde vorm van de kweekfles en de flessen op de achtergrond die bijna in plastic doosjes veranderen be zelfs over lijken te lopen in het blauwe rekje.",
+        "nl": "De AI-versie ziet er opnieuw opvallend schoon en perfect uit: geen druppels, condens of gebruikssporen. Kijk ook naar de vreemde vorm van de kweekfles en de flessen op de achtergrond die bijna in plastic doosjes veranderen en zelfs over lijken te lopen in het blauwe rekje.",
         "en": "The AI version again looks unusually clean and perfect: no droplets, condensation or signs of use. Also notice the oddly shaped culture flask and the flasks in the background that almost turn into plastic boxes and even seem to merge into the blue rack."
       },
       "kidLine": {
@@ -643,7 +639,7 @@
       "verifiedSolution": true
     },
     "note": {
-      "nl": "Kijk naar de cijfers van de maatverdeling op de tubes: cijfers staan in de verkeerde volgorde en lopen soms dwars door de maatstreepjes heen. AI heft vaak moeite met zulke kleine, precieze tekst.",
+      "nl": "Kijk naar de cijfers van de maatverdeling op de tubes: cijfers staan in de verkeerde volgorde en lopen soms dwars door de maatstreepjes heen. AI heeft vaak moeite met zulke kleine, precieze tekst.",
       "en": "Check the numbers of the measurement scales on the tubes: numbers appear in the wrong order and sometimes overlap the measurement lines. AI often struggles with small, precise text."
     },
     "images": [
@@ -701,7 +697,7 @@
         "h": 0.5
       },
       "explanation": {
-        "nl": "Kijk naar de cijfers van de maatverdeling op de tubes: cijfers staan in de verkeerde volgorde en lopen soms dwars door de maatstreepjes heen. AI heft vaak moeite met zulke kleine, precieze tekst.",
+        "nl": "Kijk naar de cijfers van de maatverdeling op de tubes: cijfers staan in de verkeerde volgorde en lopen soms dwars door de maatstreepjes heen. AI heeft vaak moeite met zulke kleine, precieze tekst.",
         "en": "Check the numbers of the measurement scales on the tubes: numbers appear in the wrong order and sometimes overlap the measurement lines. AI often struggles with small, precise text."
       },
       "kidLine": {
@@ -999,8 +995,8 @@
       "verifiedSolution": true
     },
     "note": {
-      "nl": "Veel cellen lijken opvallend veel op elkaar: perfect ronde blauwe kernen met bijne identieke roze centra. Ook de gekleurde structuren ogen erg scherp en bijna patroonmatig.",
-      "en": "Many of the cells look remarkably similar: perfectly rond blue nuclei with almost identical pink centres. The coloured structures also look unusually sharp and pattern-like."
+      "nl": "Veel cellen lijken opvallend veel op elkaar: perfect ronde blauwe kernen met bijna identieke roze centra. Ook de gekleurde structuren ogen erg scherp en bijna patroonmatig.",
+      "en": "Many of the cells look remarkably similar: perfectly round blue nuclei with almost identical pink centres. The coloured structures also look unusually sharp and pattern-like."
     },
     "images": [
       {
@@ -1057,8 +1053,8 @@
         "h": 0.6
       },
       "explanation": {
-        "nl": "Veel cellen lijken opvallend veel op elkaar: perfect ronde blauwe kernen met bijne identieke roze centra. Ook de gekleurde structuren ogen erg scherp en bijna patroonmatig.",
-        "en": "Many of the cells look remarkably similar: perfectly rond blue nuclei with almost identical pink centres. The coloured structures also look unusually sharp and pattern-like."
+        "nl": "Veel cellen lijken opvallend veel op elkaar: perfect ronde blauwe kernen met bijna identieke roze centra. Ook de gekleurde structuren ogen erg scherp en bijna patroonmatig.",
+        "en": "Many of the cells look remarkably similar: perfectly round blue nuclei with almost identical pink centres. The coloured structures also look unusually sharp and pattern-like."
       },
       "kidLine": {
         "nl": "Kijk goed naar de details van IF.",

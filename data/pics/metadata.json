@@ -7,7 +7,7 @@
     },
     "tellRegion": { "x": 0.25, "y": 0.25, "w": 0.5, "h": 0.5 },
     "explanation": {
-      "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosome met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
+      "nl": "Chromosomen met een creatieve twist? Hartjes, spiralen, cirkels en chromosomen met te veel armen: AI imiteert het uitzicht, maar begrijpt niet altijd de biologie.",
       "en": "Chromosomes with a creative twist? Hearts, spirals, circles and chromosomes with too many arms: AI imitates the look, but doesn't always understand the biology."
     },
     "rule": {
@@ -16,19 +16,15 @@
     }
   },
   "Matrix": {
-    "cue": "text",
+    "cue": "background",
     "subject": {
       "nl": "Onderzoeker voor netwerkwand in groen licht",
       "en": "Researcher in front of network wall lit green"
     },
     "tellRegion": { "x": 0.285, "y": 0.285, "w": 0.16, "h": 0.236 },
     "explanation": {
-      "nl": "AI maakt technologie vaak spectaculairder en meer futuristisch dan de werkelijkheid. Echte servers hebben kabels. AI-servers hebben gloeiende hersenen.",
-      "en": "AI loves creating a futuristic Hollywood version of technology. Real servers have cables. AI servers have glowing brains."
-    },
-    "rule": {
-      "nl": "AI schrijft grote woorden meestal goed, maar kleine letters zijn decoratie. Vergroot daarom altijd de kleinste tekst in beeld.",
-      "en": "AI usually gets big words right, but small lettering is just decoration. So always zoom in on the smallest text in the frame."
+      "nl": "AI maakt technologie vaak spectaculairder en meer futuristisch dan de werkelijkheid. Echte servers hebben kabels. AI-servers hebben… gloeiende hersenen.",
+      "en": "AI loves creating a futuristic Hollywood version of technology. Real servers have cables. AI servers have… glowing brains."
     }
   },
   "LN": {
