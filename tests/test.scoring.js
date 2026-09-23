@@ -102,30 +102,25 @@
       }
     });
 
-    /* ── 100分制阶梯爬升计分 ──────────────────────────────────────── */
+    /* ── 均分制阶梯爬升计分 ────────────────────────────────────────── */
 
-    T.describe('progressive scoring (100pt max)', function () {
+    T.describe('progressive scoring (equal distribution)', function () {
       [1, 2, 3, 4].forEach(function (k) {
-        T.it('pairsPerLevel=' + k + ' 时全对总积分恒为 100 分且高等级分更高', function () {
-          var session = { pairsPerLevel: k, maxLevel: 4, results: [] };
+        T.it('pairsPerLevel=' + k + ' 时每道题平均分配 1 分且全对总分等于总题数', function () {
+          var session = { pairsPerLevel: k, maxLevel: 6, total: 6 * k, results: [] };
           var total = 0;
-          var levelPoints = {};
 
-          for (var lvl = 1; lvl <= 4; lvl++) {
-            levelPoints[lvl] = 0;
+          for (var lvl = 1; lvl <= 6; lvl++) {
             for (var i = 0; i < k; i++) {
               var round = { puzzle: { level: lvl }, correct: true };
               var pts = S.roundPoints(round, session);
-              T.assert(pts > 0, '单题得分必须大于 0');
+              T.assertEquals(pts, 1, '每道题得分均固定为 1 分');
               total += pts;
-              levelPoints[lvl] += pts;
               session.results.push(round);
             }
           }
 
-          T.assertEquals(total, 100, 'k=' + k + ' 时全对总分必须精确为 100 分');
-          T.assert(levelPoints[1] < levelPoints[2] && levelPoints[2] < levelPoints[3] && levelPoints[3] < levelPoints[4],
-            '每级累计分必须随难度递增: ' + JSON.stringify(levelPoints));
+          T.assertEquals(total, 6 * k, '全对总分必须精确等于总题数');
         });
       });
     });

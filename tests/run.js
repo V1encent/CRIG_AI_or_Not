@@ -81,9 +81,14 @@ function main() {
   }
 
   // 只给 console —— 刻意不给 window / document / localStorage / navigator，
-  // 这样任何意外触碰 DOM 的代码都会立刻暴露，而不是在 Node 里静默通过。
-  const ctx = vm.createContext({ console });
+  // 语法自检：先验证 js/ 目录下所有脚本文件的语法正确性（包括未直接加载到 Node 的 DOM 模块）
+  const jsFiles = fs.readdirSync(path.join(ROOT, 'js')).filter(f => f.endsWith('.js'));
+  jsFiles.forEach(f => {
+    const code = fs.readFileSync(path.join(ROOT, 'js', f), 'utf8');
+    new vm.Script(code, { filename: 'js/' + f });
+  });
 
+  const ctx = vm.createContext({ console });
   SOURCES.forEach(f => load(ctx, f));
   FIXED_TESTS.forEach(f => load(ctx, f));
   tests.forEach(f => load(ctx, f));

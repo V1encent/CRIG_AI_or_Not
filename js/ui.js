@@ -28,7 +28,7 @@
       t(app, 'hud.of') + ' ' + s.total;
     var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
     if (progCfg.enabled) {
-      el.hudScore.textContent = s.score + ' / ' + (progCfg.targetTotalScore || 100) + ' ' + t(app, 'hud.score');
+      el.hudScore.textContent = s.score + ' / ' + (s.total || progCfg.targetTotalScore || 12) + ' ' + t(app, 'hud.score');
       dom.show(el.hudLevel, false);
     } else {
       el.hudScore.textContent = s.score + ' ' + t(app, 'hud.score');
@@ -45,6 +45,44 @@
     el.soundBtn.textContent = t(app, 'hud.sound') + (AON.sound.isEnabled() ? ' ✓' : ' ✗');
     el.soundBtn.hidden = app.settings.isKiosk;   /* 展台上不给人关声音的开关（本来就静音） */
     dom.show(el.resetChip, false);
+  }
+
+  function renderDifficultyBar(app) {
+    var bar = app.el.diffBar;
+    var host = app.el.diffSteps;
+    if (!bar || !host) return;
+
+    var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
+    if (!progCfg.enabled) {
+      dom.show(bar, false);
+      return;
+    }
+    dom.show(bar, true);
+
+    var currentLevel = (app.current && app.current.puzzle && app.current.puzzle.level) || 1;
+    var maxLvl = progCfg.maxLevel || 6;
+
+    if (app.el.diffLevelTag) {
+      dom.show(app.el.diffLevelTag, false);
+    }
+
+    dom.clear(host);
+    for (var l = 1; l <= maxLvl; l++) {
+      var cls = 'diff-step';
+      if (l < currentLevel) cls += ' step-done';
+      else if (l === currentLevel) cls += ' step-active';
+      else cls += ' step-upcoming';
+
+      var label = (l < currentLevel ? '✓' : String(l));
+      var stepEl = dom.el('div', {
+        'class': cls,
+        'data-lvl': String(l),
+        'aria-label': 'Level ' + l
+      }, [
+        dom.el('span', { 'class': 'step-num', text: label })
+      ]);
+      host.appendChild(stepEl);
+    }
   }
 
   function setCountdown(app, msLeft) {
@@ -105,6 +143,7 @@
     var board = app.el.board;
     dom.clear(board);
     dom.clear(app.el.teachWrap);
+    if (app.el.notePopup) dom.show(app.el.notePopup, false);
 
     app.slotEls = view.order.map(function (img, i) {
       return AON.answerReveal.buildSlot({ slot: i, image: img, lang: app.lang });
@@ -116,6 +155,7 @@
     if (app.devAudit) AON.answerReveal.assertClean(board);
 
     startTimer(app);
+    renderDifficultyBar(app);
     hud(app);
   }
 
@@ -157,9 +197,66 @@
     if (app.el.timer) dom.show(app.el.timer, false);
   }
 
+  // ── 弹出 Note 说明弹窗 ───────────────────────────────────────────────
+  function showNotePopup(app) {
+    if (!app.el.notePopup) return;
+    if (app.cancelAutoAdvance) {
+      app.cancelAutoAdvance();
+    } else if (app.timers && app.timers.auto) {
+      clearInterval(app.timers.auto);
+      app.timers.auto = null;
+    }
+    app.autoCancelled = true;
+
+    var p = app.current && app.current.puzzle;
+    if (!p) return;
+
+    var v = AON.answerReveal.verdictOf(app.picked, app.view.aiSlot);
+    var isCorrect = (v === 'correct');
+
+    if (app.el.noteVerdictBadge) {
+      dom.clear(app.el.noteVerdictBadge);
+      app.el.noteVerdictBadge.appendChild(dom.el('span', {
+        'class': 'badge verdict-pill ' + (isCorrect ? 'badge-real' : 'badge-ai'),
+        text: (isCorrect ? '✓ ' : '✗ ') + t(app, isCorrect ? 'reveal.correct' : (v === 'wrong' ? 'reveal.wrong' : 'round.timeUp'))
+      }));
+    }
+
+    var s = app.session;
+    if (app.el.noteLevelChip) {
+      app.el.noteLevelChip.textContent = t(app, 'hud.round') + ' ' + (s ? s.roundIndex : 1) + ' / ' + (s ? s.total : 12);
+    }
+
+    var noteObj = p.note || (p.teaching && p.teaching.explanation) || '';
+    var noteText = pick(app, noteObj);
+    if (app.el.noteText) {
+      app.el.noteText.textContent = noteText;
+    }
+
+    var ruleObj = (p.teaching && p.teaching.rule) || '';
+    var ruleText = pick(app, ruleObj);
+    if (app.el.noteRuleCard && app.el.noteRuleText) {
+      if (ruleText) {
+        app.el.noteRuleText.textContent = ruleText;
+        dom.show(app.el.noteRuleCard, true);
+      } else {
+        dom.show(app.el.noteRuleCard, false);
+      }
+    }
+
+    if (app.el.popupNextLabel) {
+      app.el.popupNextLabel.textContent = nextLabel(app);
+    }
+
+    dom.show(app.el.notePopup, true);
+
+    if (app.el.btnPopupNext) {
+      app.el.btnPopupNext.focus();
+    }
+  }
+
   // ── 教学面板 ───────────────────────────────────────────────────────
-  /* 固定版式，自上而下：状态 → 聚焦图 → 线索 → 说明 → rule → 细节 → 下一题。
-   * 「下一题」在 DOM 里排第一（Tab 序），用 CSS order 推到视觉最下方。 */
+  /* 玩家完成选择后：弹出该组图片的 note 说明，并在下方保留便捷操作栏 */
 
   function teach(app) {
     var view = app.view;
@@ -168,6 +265,9 @@
 
     var correct = AON.answerReveal.verdictOf(app.picked, view.aiSlot);
     var isCorrect = (correct === 'correct');
+
+    // 自动弹出对应题目的辨别 note
+    showNotePopup(app);
 
     var verdictEl = dom.el('div', { 'class': 'simple-verdict' }, [
       dom.el('span', {
@@ -179,6 +279,12 @@
     var panel = dom.el('div', { 'class': 'teach teach-compact' }, [
       verdictEl,
       dom.el('button', {
+        'class': 'btn btn-show-note',
+        type: 'button',
+        'data-act': 'show-note',
+        text: t(app, 'teach.showNote')
+      }),
+      dom.el('button', {
         'class': 'btn btn-primary btn-next',
         type: 'button',
         'data-act': 'next',
@@ -186,15 +292,14 @@
       })
     ]);
 
-    if (app.settings.teachAutoAdvanceMs > 0 && !app.autoCancelled) {
+    var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
+    var allowAuto = (!progCfg.enabled || progCfg.autoAdvance);
+    if (app.settings.teachAutoAdvanceMs > 0 && !app.autoCancelled && allowAuto) {
       panel.appendChild(autoRing(app));
     }
 
     host.appendChild(panel);
     host.scrollTop = 0;
-
-    var btn = panel.querySelector('button[data-act="next"]');
-    if (btn) btn.focus();
   }
 
   function nextLabel(app) {
@@ -306,7 +411,7 @@
     dom.clear(host);
 
     var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
-    var scoreStr = s.score + (progCfg.enabled ? (' / ' + (progCfg.targetTotalScore || 100)) : '') + ' ' + t(app, 'hud.score');
+    var scoreStr = s.score + (progCfg.enabled ? (' / ' + (s.total || progCfg.targetTotalScore || 12)) : '') + ' ' + t(app, 'hud.score');
 
     host.appendChild(dom.el('p', { 'class': 'summary-score' }, [
       dom.el('span', { text: t(app, 'summary.youGot') + ' ' }),
@@ -353,6 +458,8 @@
 
   AON.ui = {
     hud: hud,
+    renderDifficultyBar: renderDifficultyBar,
+    showNotePopup: showNotePopup,
     setCountdown: setCountdown,
     menu: menu,
     setLevel: setLevel,

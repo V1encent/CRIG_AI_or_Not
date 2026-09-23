@@ -349,7 +349,7 @@
         }
       });
 
-      T.it('一局全对总分精确等于 100 分', function () {
+      T.it('一局全对总分精确等于总题数（每题平均分配 1 分）', function () {
         var pool = mkLevelSet();
         var deck = S.createProgressiveDeck({ puzzles: pool, pairsPerLevel: 1, seed: 99 });
         var cards = deck.drawAll();
@@ -357,9 +357,10 @@
         var sess = { pairsPerLevel: 1, maxLevel: 4, streak: 0 };
         cards.forEach(function (card) {
           var pts = g.AON.scoring.roundPoints({ puzzle: card.puzzle, correct: true }, sess);
+          T.assertEquals(pts, 1, '每题得分为 1');
           total += pts;
         });
-        T.assertEquals(total, 100, '4题全对总积分必须精确为 100 分');
+        T.assertEquals(total, cards.length, '全对总积分精确等于总题数');
       });
     });
   });

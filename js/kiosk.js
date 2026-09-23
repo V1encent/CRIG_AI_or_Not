@@ -40,11 +40,14 @@
       if (screen === 'attract' || screen === 'boot' || screen === 'error') return;
       /* 正在放大看图不算空闲——那正是最投入的时刻。 */
       if (AON.zoom && AON.zoom.isOpen()) return;
+      /* 正在查看 Note 说明弹窗不算空闲 */
+      var popup = g.document && g.document.getElementById('note-popup');
+      if (popup && !popup.hidden) return;
       idleTimer = setTimeout(beginCountdown, s.idleToAttractMs);
     }
 
     /* 任何输入都重置空闲计时。capture 阶段监听，免得被 stopPropagation 挡掉。 */
-    ['pointerdown', 'keydown', 'wheel'].forEach(function (type) {
+    ['pointerdown', 'keydown', 'wheel', 'scroll'].forEach(function (type) {
       g.document.addEventListener(type, arm, { capture: true, passive: true });
     });
 

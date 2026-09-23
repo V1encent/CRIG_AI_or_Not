@@ -40,6 +40,7 @@
 <!-- ══ attract ═══════════════════════════════════════════════════════
      展台空闲时循环显示。2 米外可读，慢动画，不闪烁。 -->
 <section class="screen attract" data-when="attract">
+  <img src="assets/img/crig-logo.webp" alt="CRIG - Cancer Research Institute Ghent" class="attract-logo">
   <h1 class="pulse" data-i18n="app.title">AI of niet AI?</h1>
   <p data-i18n="app.tagline">Twee beelden. Eén is echt, één is gemaakt door AI.</p>
   <p class="tap-hint" data-i18n="attract.tap">Tik om te spelen</p>
@@ -58,6 +59,7 @@
   </header>
 
   <div class="center-col">
+    <img src="assets/img/crig-logo.webp" alt="CRIG logo" class="menu-logo">
     <h1 data-i18n="app.title">AI of niet AI?</h1>
     <p data-i18n="app.tagline">Twee beelden. Eén is echt, één is gemaakt door AI.</p>
     <div class="menu-grid" id="menu-grid"></div>
@@ -71,6 +73,7 @@
      而重建就意味着要重新加载图片——揭晓时刻最不该发生的事。 -->
 <section class="screen" data-when="round">
   <header class="hud">
+    <div class="hud-brand"><img src="assets/img/crig-logo.webp" alt="CRIG logo" class="brand-logo"></div>
     <span class="hud-stat" id="hud-round"></span>
     <span class="hud-stat" id="hud-score"></span>
     <span class="hud-stat" id="hud-streak"></span>
@@ -84,6 +87,11 @@
     <button class="btn btn-ghost" id="btn-menu" type="button" data-i18n="hud.menu">Menu</button>
   </header>
 
+  <!-- 网页上方：阶梯上升进度指示，无字面难度标签，自然传递挑战攀升感 -->
+  <div class="difficulty-bar" id="difficulty-bar" aria-label="Voortgang">
+    <div class="diff-steps" id="diff-steps" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="6"></div>
+  </div>
+
   <h1 class="round-question" id="round-question" data-i18n="round.question">Welk beeld is door AI gemaakt?</h1>
 
   <!-- 作答限时：扁平进度条，不用倒数数字——避免读秒焦虑。 -->
@@ -94,9 +102,43 @@
   <div class="teach-wrap" id="teach-wrap"></div>
 </section>
 
+<!-- ══ Note Popup Modal ═══════════════════════════════════════════════
+     玩家完成选择后弹出的 AI 识别破绽说明弹窗 -->
+<div class="note-popup-overlay" id="note-popup" hidden>
+  <div class="note-popup-backdrop" id="note-popup-backdrop"></div>
+  <div class="note-popup-dialog" role="dialog" aria-modal="true" aria-labelledby="note-title">
+    <button class="btn-close-note" id="btn-close-note" type="button" aria-label="Sluiten" title="Sluiten [Esc]">✕</button>
+    
+    <div class="note-popup-header">
+      <div class="note-verdict-badge" id="note-verdict-badge"></div>
+      <span class="note-level-chip" id="note-level-chip">Level 1</span>
+    </div>
+    
+    <div class="note-popup-body">
+      <div class="note-title-row">
+        <span class="note-badge-icon">💡</span>
+        <h2 id="note-title" class="note-title" data-i18n="teach.noteTitle">Hoe herken je de AI?</h2>
+      </div>
+      <p class="note-text" id="note-text"></p>
+      
+      <div class="note-rule-card" id="note-rule-card">
+        <span class="note-rule-tag" data-i18n="teach.remember">Onthoud:</span>
+        <p class="note-rule-text" id="note-rule-text"></p>
+      </div>
+    </div>
+
+    <div class="note-popup-footer">
+      <button class="btn btn-primary btn-next btn-popup-next" id="btn-popup-next" type="button" data-act="next">
+        <span id="popup-next-label" data-i18n="teach.next">Volgende vraag</span> →
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ summary ═══════════════════════════════════════════════════════ -->
 <section class="screen" data-when="summary">
   <div class="center-col">
+    <img src="assets/img/crig-logo.webp" alt="CRIG logo" class="summary-logo">
     <h1 data-i18n="summary.title">Klaar!</h1>
     <div id="summary-body"></div>
     <div class="row center">

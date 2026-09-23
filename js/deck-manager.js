@@ -266,13 +266,13 @@
       var realImg = p.images.find(function (im) { return !im.isAI; }) || p.images[0];
       var aiImg = p.images.find(function (im) { return im.isAI; }) || p.images[1];
 
-      var slideLabel = p.slide ? ('Slide ' + p.slide) : ('#' + (index + 1));
-      var title = (p.images[0] && p.images[0].provenance && p.images[0].provenance.subject && (p.images[0].provenance.subject.en || p.images[0].provenance.subject.nl)) || p.id;
-      var clueText = (p.teaching && p.teaching.explanation && (p.teaching.explanation.en || p.teaching.explanation.nl)) || '';
+      var slideLabel = p.level ? ('Level ' + p.level) : (p.slide ? ('Slide ' + p.slide) : ('#' + (index + 1)));
+      var title = (p.images[0] && p.images[0].provenance && p.images[0].provenance.subject && (p.images[0].provenance.subject.nl || p.images[0].provenance.subject.en)) || p.pairKey || p.id;
+      var clueText = (p.note && (p.note.nl || p.note.en)) || (p.teaching && p.teaching.explanation && (p.teaching.explanation.nl || p.teaching.explanation.en)) || '';
 
       card.innerHTML = [
         '<div class="deck-item-top">',
-        '  <span class="deck-slide-badge">' + slideLabel + ' · ' + p.id + '</span>',
+        '  <span class="deck-slide-badge">' + slideLabel + ' · ' + (p.pairKey ? (p.pairKey + ' · ') : '') + p.id + '</span>',
         '  <span class="deck-cue-tag">' + ((p.teaching && p.teaching.cue) || 'visual') + '</span>',
         '  <span class="spacer"></span>',
         '  <button type="button" class="btn btn-primary btn-play-puzzle" data-pid="' + p.id + '">' + t('deck.playThis') + ' ▶</button>',

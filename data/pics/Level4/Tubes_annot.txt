@@ -1,0 +1,3 @@
+NL: Kijk naar de cijfers van de maatverdeling op de tubes: cijfers staan in de verkeerde volgorde en lopen soms dwars door de maatstreepjes heen. AI heft vaak moeite met zulke kleine, precieze tekst.
+
+ENG: Check the numbers of the measurement scales on the tubes: numbers appear in the wrong order and sometimes overlap the measurement lines. AI often struggles with small, precise text.

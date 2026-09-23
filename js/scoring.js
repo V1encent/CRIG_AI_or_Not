@@ -10,12 +10,15 @@
 
   function calculateLevelPoints(level, levelQuestionsCount, maxLevel, targetTotal, idxInLevel) {
     targetTotal = targetTotal || 100;
-    maxLevel = maxLevel || 4;
+    maxLevel = maxLevel || 6;
     levelQuestionsCount = Math.max(1, levelQuestionsCount || 1);
     idxInLevel = idxInLevel || 0;
     var W = 0;
     for (var l = 1; l <= maxLevel; l++) W += l;
-    var levelTotal = Math.round((targetTotal * level) / W);
+    var prevCum = 0;
+    for (var p = 1; p < level; p++) prevCum += p;
+    var curCum = prevCum + level;
+    var levelTotal = Math.round((targetTotal * curCum) / W) - Math.round((targetTotal * prevCum) / W);
     var base = Math.floor(levelTotal / levelQuestionsCount);
     var rem = levelTotal % levelQuestionsCount;
     return Math.max(1, base + (idxInLevel < rem ? 1 : 0));
@@ -30,19 +33,10 @@
     cfg = cfg || g.AON_CONFIG.scoring;
     if (!round || !round.correct) return 0;
 
-    // 分级阶梯计分（100分制）：若题目带有 level
-    if (round.puzzle && round.puzzle.level) {
-      var lvl = round.puzzle.level;
-      var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
-      var k = (session && session.pairsPerLevel) || progCfg.pairsPerLevel || 1;
-      var maxLvl = (session && session.maxLevel) || progCfg.maxLevel || 4;
-      var priorInLevel = 0;
-      if (session && session.results && Array.isArray(session.results)) {
-        session.results.forEach(function (r) {
-          if (r && r.puzzle && r.puzzle.level === lvl) priorInLevel++;
-        });
-      }
-      return calculateLevelPoints(lvl, k, maxLvl, progCfg.targetTotalScore || 100, priorInLevel);
+    // 分级阶梯爬升模式（均分制）：当且仅当题目带有 level 且启用 progressive 时，每题得 1 分
+    var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
+    if (round.puzzle && round.puzzle.level && progCfg.enabled) {
+      return progCfg.pointsPerQuestion != null ? progCfg.pointsPerQuestion : 1;
     }
 
     var base = cfg.base[round.tier];

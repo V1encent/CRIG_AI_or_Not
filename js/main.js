@@ -45,7 +45,7 @@
       streak: 0,
       correctStreak: 0,
       pairsPerLevel: progCfg.pairsPerLevel || 1,
-      maxLevel: progCfg.maxLevel || 4,
+      maxLevel: progCfg.maxLevel || 6,
       results: []
     };
   }
@@ -145,6 +145,19 @@
     e.live = dom.$('#live');
     e.question = dom.$('#round-question');
     e.loupeBtn = dom.$('#btn-loupe');
+    e.diffBar = dom.$('#difficulty-bar');
+    e.diffSteps = dom.$('#diff-steps');
+    e.diffLevelTag = dom.$('#diff-level-tag');
+    e.notePopup = dom.$('#note-popup');
+    e.notePopupBackdrop = dom.$('#note-popup-backdrop');
+    e.btnCloseNote = dom.$('#btn-close-note');
+    e.btnPopupNext = dom.$('#btn-popup-next');
+    e.noteVerdictBadge = dom.$('#note-verdict-badge');
+    e.noteLevelChip = dom.$('#note-level-chip');
+    e.noteText = dom.$('#note-text');
+    e.noteRuleCard = dom.$('#note-rule-card');
+    e.noteRuleText = dom.$('#note-rule-text');
+    e.popupNextLabel = dom.$('#popup-next-label');
   }
 
   // ── 状态机的反应 ───────────────────────────────────────────────────
@@ -177,6 +190,7 @@
 
   function onAttract() {
     AON.kiosk && AON.kiosk.clearSession();
+    if (app.el.notePopup) dom.show(app.el.notePopup, false);
     app.session = blankSession(app.level);
     var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
     app.session.total = (progCfg.enabled ? (progCfg.maxLevel * (progCfg.pairsPerLevel || 1)) : app.settings.roundsPerSession);
@@ -191,7 +205,7 @@
       return AON.selector.createProgressiveDeck({
         puzzles: app.pool,
         pairsPerLevel: progCfg.pairsPerLevel || 1,
-        maxLevel: progCfg.maxLevel || 4,
+        maxLevel: progCfg.maxLevel || 6,
         seed: app.settings.seed == null ? (Date.now() % 2147483647) : app.settings.seed,
         recentRealIds: app.recentRealIds || []
       });
@@ -254,6 +268,7 @@
   /** 抽一道题并渲染。档位固定时按 tier，自适应时按连续分数，分级模式按阶梯预先序列。 */
   function onRound() {
     var s = app.session;
+    if (app.el.notePopup) dom.show(app.el.notePopup, false);
     var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
     var card;
     if (progCfg.enabled && app.deck && typeof app.deck.draw === 'function') {
@@ -389,6 +404,9 @@
    * 一个人在读说明时被自动翻页推走，是最招人烦的一类交互。 */
 
   function armAutoAdvance() {
+    var progCfg = (g.AON_CONFIG && g.AON_CONFIG.progressive) || {};
+    if (progCfg.enabled && !progCfg.autoAdvance) return;
+    if (app.el.notePopup && !app.el.notePopup.hidden) return;
     if (!AON.modes.shouldAutoAdvance(app.settings, app.autoCancelled)) return;
     var total = app.settings.teachAutoAdvanceMs;
     var t0 = (g.performance || Date).now();
@@ -403,6 +421,7 @@
     if (app.timers.auto) { clearInterval(app.timers.auto); app.timers.auto = null; }
     app.el.autoFill = null;
   }
+  app.cancelAutoAdvance = cancelAutoAdvance;
 
   function userTouched() {
     if (!app.autoCancelled && app.timers.auto) {
@@ -421,7 +440,35 @@
     /* 卡片选择，走委托：卡片每轮重建，逐元素绑定必然漏解绑。 */
     dom.on(app.el.board, 'click', '.card', function (ev) { pick(Number(this.getAttribute('data-slot'))); });
 
-    dom.on(app.el.teachWrap, 'click', '[data-act="next"]', function () { goNext(); });
+    dom.on(app.el.teachWrap, 'click', '[data-act="next"]', function () {
+      if (app.el.notePopup) dom.show(app.el.notePopup, false);
+      goNext();
+    });
+
+    dom.on(app.el.teachWrap, 'click', '[data-act="show-note"]', function () {
+      cancelAutoAdvance();
+      app.autoCancelled = true;
+      AON.ui.showNotePopup(app);
+    });
+
+    if (app.el.btnCloseNote) {
+      app.el.btnCloseNote.addEventListener('click', function () {
+        dom.show(app.el.notePopup, false);
+        if (app.kiosk && app.kiosk.poke) app.kiosk.poke();
+      });
+    }
+    if (app.el.notePopupBackdrop) {
+      app.el.notePopupBackdrop.addEventListener('click', function () {
+        dom.show(app.el.notePopup, false);
+        if (app.kiosk && app.kiosk.poke) app.kiosk.poke();
+      });
+    }
+    if (app.el.btnPopupNext) {
+      app.el.btnPopupNext.addEventListener('click', function () {
+        dom.show(app.el.notePopup, false);
+        goNext();
+      });
+    }
 
     /* 任何触摸都取消自动前进。 */
     d.addEventListener('pointerdown', userTouched, { capture: true, passive: true });
@@ -436,7 +483,14 @@
         if (ev.key === '1' || ev.key === 'ArrowLeft') { ev.preventDefault(); pick(0); }
         else if (ev.key === '2' || ev.key === 'ArrowRight') { ev.preventDefault(); pick(1); }
       } else if (st === 'teach') {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); goNext(); }
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          if (app.el.notePopup) dom.show(app.el.notePopup, false);
+          goNext();
+        } else if (ev.key === ' ' && (!app.el.notePopup || app.el.notePopup.hidden)) {
+          ev.preventDefault();
+          goNext();
+        }
       } else if (st === 'menu') {
         if (ev.key === 'Enter') { ev.preventDefault(); startSession(); }
       } else if (st === 'attract') {
@@ -444,7 +498,14 @@
       } else if (st === 'summary') {
         if (ev.key === 'Enter') { ev.preventDefault(); playAgain(); }
       }
-      if (ev.key === 'Escape' && (st === 'round' || st === 'teach')) app.machine.send('ATTRACT');
+      if (ev.key === 'Escape') {
+        if (app.el.notePopup && !app.el.notePopup.hidden) {
+          ev.preventDefault();
+          dom.show(app.el.notePopup, false);
+          return;
+        }
+        if (st === 'round' || st === 'teach') app.machine.send('ATTRACT');
+      }
       if (ev.key === 'm' || ev.key === 'M') {
         if (AON.loupe) {
           var on = AON.loupe.toggle();
@@ -533,6 +594,9 @@
     if (st === 'menu') AON.ui.menu(app);
     if (st === 'summary') AON.ui.summary(app);
     if (st === 'teach') AON.ui.teach(app);
+    if (st === 'round' || st === 'reveal' || st === 'teach') {
+      AON.ui.renderDifficultyBar(app);
+    }
     AON.ui.hud(app);
     updateLoupeBtn(AON.loupe && AON.loupe.isEnabled && AON.loupe.isEnabled());
   }

@@ -1,0 +1,3 @@
+NL: Let opnieuw op de details! De grafiek links lijkt overtuigend, maar de nummering klopt niet: 13 staat er bijvoorbeeld twee keer in. Ook rechts lopen kleuren en datapunten onnatuurlijk in elkaar over. Kleine details verraden de AI.
+
+ENG: Look again at the details! The graph on the left looks convincing, but the numbering doesn’t add up: 13 appears twice, for example. On the right, colours and data points also blend together unnaturally. Small details give the AI away.
