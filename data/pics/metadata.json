@@ -25,6 +25,10 @@
     "explanation": {
       "nl": "AI maakt technologie vaak spectaculairder en meer futuristisch dan de werkelijkheid. Echte servers hebben kabels. AI-servers hebben… gloeiende hersenen.",
       "en": "AI loves creating a futuristic Hollywood version of technology. Real servers have cables. AI servers have… glowing brains."
+    },
+    "rule": {
+      "nl": "Let op overdreven sciencefiction: echte technologie en servers hebben praktische kabels en aansluitingen, geen magisch gloeiende structuren.",
+      "en": "Watch out for sci-fi exaggeration: real technology and servers rely on practical cables and connections, not magical glowing structures."
     }
   },
   "LN": {

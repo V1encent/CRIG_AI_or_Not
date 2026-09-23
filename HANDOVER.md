@@ -94,7 +94,7 @@ ai-or-not/
 | ID | 关卡 | Pair Key | 题材 / 主题 | 线索分类 (`cue`) | 是否带 REMEMBER 规则卡片 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `p001` | Level 1 | **Chromsome** | 显微镜下的染色体 (Chromosomes under microscope) | `cell-structure` | ✅ 有（染色体形态与生物学规律） |
-| `p002` | Level 1 | **Matrix** | 绿光服务器网壁前的研究员 (Researcher & network wall) | `background` | ❌ **无**（此图无文字，已删文字技巧） |
+| `p002` | Level 1 | **Matrix** | 绿光服务器网壁前的研究员 (Researcher & network wall) | `background` | ✅ 有（警惕科幻夸张：真实技术设备布满线缆而非魔幻发光） |
 | `p003` | Level 2 | **LN** | 液氮罐与实验员 (Liquid nitrogen dewar) | `text` | ✅ 有（背景海报伪文字与防护手套） |
 | `p004` | Level 2 | **Zebrafish** | 水族箱中的斑马鱼 (Zebrafish in aquarium) | `repetition` | ✅ 有（检查肢体与鳍的对称/重复） |
 | `p005` | Level 3 | **Celldish** | 培养皿与培养基 (Culture dish & medium) | `physics` | ✅ 有（液体水平面与器皿融合伪影） |
@@ -116,7 +116,7 @@ ai-or-not/
   1. 顶部：作答结果徽章（“Correct! / Goed geraden!” 或 “Wrong! / Helaas!”）以及当前轮数进度（如 `Round 1 / 12`）。
   2. 中间卡片（解释详情）：读取 `p.note`（即配对对应的 NL/ENG 说明，包含关于 AI 与 Real 区别的描述）。
   3. 技巧与规律卡片 (`#note-rule-card`，即 **Onthoud / Remember**）：
-     * **选填特性**：若该题在 `teaching` 中配置了 `rule`，则渲染该卡片；**若没有配置 `rule`（如 Matrix），卡片自动隐藏**，不留空白占位。
+     * **选填特性**：若该题在 `teaching` 中配置了 `rule`，则渲染该卡片；若没有配置 `rule`，卡片自动隐藏，不留空白占位。
   4. 底部：“Volgende / Next” 按钮，点击后关闭弹窗并推进到下一道题。
 
 ### 4.2 防作弊与安全性原则

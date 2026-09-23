@@ -173,6 +173,10 @@
       "kidLine": {
         "nl": "Kijk goed naar de details van Matrix.",
         "en": "Look closely at the details of Matrix."
+      },
+      "rule": {
+        "nl": "Let op overdreven sciencefiction: echte technologie en servers hebben praktische kabels en aansluitingen, geen magisch gloeiende structuren.",
+        "en": "Watch out for sci-fi exaggeration: real technology and servers rely on practical cables and connections, not magical glowing structures."
       }
     }
   },
